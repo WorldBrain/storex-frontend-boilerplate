@@ -1,0 +1,11 @@
+@import "./globals.module.scss";
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: $color-background;
+    font-size: 12pt;
+    color: red;
+}

@@ -1,0 +1,19 @@
+@import "../../styles/globals.module.scss";
+
+.item {
+    display: flex;
+    color: $color-primary;
+    margin-top: 50px;
+}
+
+.done {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.remove {
+    position: relative;
+    left: 10px;
+    top: 2px;
+    cursor: pointer;
+}

@@ -1,0 +1,1 @@
+export type BackendType = 'memory' | 'client'
