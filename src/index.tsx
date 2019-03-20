@@ -1,19 +1,31 @@
 import createBrowserHistory from "history/createBrowserHistory";
-import runUi from './ui'
+import { runUI, destroyUI } from './ui'
 import * as serviceWorker from './serviceWorker'
 import { createServices } from './services';
 import { BackendType } from './types';
 import { createStorage } from "./storage";
 
-export async function main(options : {backend : BackendType}) {
+export interface MainOptions {
+    backend : BackendType
+    dbName? : string
+}
+
+export async function main(options : MainOptions) {
     const history = createBrowserHistory()
-    const services = createServices(options)
-    const storage = await createStorage(options)
+    const storage = await createStorage({ ...options, dbName: options.dbName || 'syncClient1' })
+    const services = createServices(storage, options)
     if (typeof window !== 'undefined') {
-        Object.assign(window, { services, storage })
+        Object.assign(window, { services, storage, restart: async (restartOptions : Partial<MainOptions>) => {
+            await restart({ ...options, ...restartOptions })
+        } })
     }
-    runUi({services, storage, history})
+    runUI({services, storage, history})
     serviceWorker.unregister()
+}
+
+export async function restart(options : MainOptions) {
+    destroyUI()
+    await main(options)
 }
 
 main({backend: process.env['REACT_APP_BACKEND'] as BackendType})

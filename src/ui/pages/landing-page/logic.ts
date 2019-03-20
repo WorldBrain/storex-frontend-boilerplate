@@ -43,9 +43,7 @@ export class Logic extends logic.UILogic<State, Event> {
     }
 
     async processInit(event : any, options : any) : Promise<logic.UIMutation<State>> {
-        this.options.todoLists.getOrCreateDefaultList({
-            defaultLabel: 'Storex Sync demo Todo List'
-        }).then(list => this.processUIEvent({
+        this.options.todoLists.getDefaultList().then(list => this.processUIEvent({
             type: 'loaded',
             list,
         }, options))

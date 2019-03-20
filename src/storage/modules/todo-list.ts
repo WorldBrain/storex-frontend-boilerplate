@@ -7,7 +7,8 @@ export class TodoListStorage extends StorageModule {
             todoList: {
                 version: new Date('2018-03-03'),
                 fields: {
-                    label: { type: 'text' }
+                    label: { type: 'text' },
+                    default: { type: 'boolean', optional: true }
                 }
             },
             todoItem: {
@@ -59,17 +60,26 @@ export class TodoListStorage extends StorageModule {
     })
 
     async getOrCreateDefaultList(options : { defaultLabel : string }) : Promise<TodoList> {
+        const defaultList = await this.getDefaultList()
+        if (defaultList) {
+            return defaultList
+        }
+
+        const { object: list } : { object : TodoList } = await this.operation('createList', { label: 'Storex Sync demo Todo List' })
+        const items : TodoItem[] = [
+            await this.addListItem({ label: 'Cook spam', done: true }, { list }),
+            await this.addListItem({ label: 'Buy eggs', done: false }, { list }),
+        ]
+        return { ...list, items }
+    }
+
+    async getDefaultList() : Promise<TodoList | null> {
         const allLists = await this.operation('findAllLists', {})
         if (!allLists.length) {
-            const { object: list } = await this.operation('createList', { label: options.defaultLabel })
-            const items : TodoItem[] = [
-                await this.addListItem({ label: 'Cook spam', done: true }, { list }),
-                await this.addListItem({ label: 'Buy eggs', done: false }, { list }),
-            ]
-            return { ...list, items }
+            return null
         }
-        const defaultList = allLists[0]
 
+        const defaultList = allLists[0]
         const items = await this.operation('findListItems', { list: defaultList.id })
         return { ...defaultList, items }
     }

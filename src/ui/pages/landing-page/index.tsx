@@ -18,8 +18,13 @@ export default class LandingPage extends UIElement<Props, State> {
         return (
             <div className={styles.container}>
                 <div className={styles.header}>
-                    {!this.state.list && 'Loading...'}
-                    {this.state.list && this.state.list.label}
+                    {this.state.loadState === 'running' && 'Loading...'}
+                    {this.state.loadState === 'error' && 'Error loading default list'}
+                    {this.state.loadState === 'success' && (
+                        this.state.list
+                        ? this.state.list.label
+                        : 'Could not find default list'
+                    )}
                 </div>
                 {this.state.list && <div>
                     <TodoList

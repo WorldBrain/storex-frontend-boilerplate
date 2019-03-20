@@ -20,46 +20,70 @@ export const STORAGE_MODULE_INFO : StorageModuleInfo = {
     todoList: { sync: true },
 }
 
-export async function createStorage(options : { backend : BackendType }) : Promise<Storage> {
-    let storageBackend : StorageBackend
-    if (options.backend === 'memory') {
-        storageBackend = new DexieStorageBackend({ dbName: 'syncTest', idbImplementation: inMemory() })
-    } else if (options.backend == 'client') {
-        storageBackend = new DexieStorageBackend({ dbName: 'syncTest' })
-    } else {
-        throw new Error(`Tried to create storage with unknown backend: ${options.backend}`)
+export async function createStorage(options : { backend : BackendType, dbName : string }) : Promise<Storage> {
+    const { clientStorageBackend, serverStorageBackend } = createStorageBackends(options)
+
+    const clientStorageManager = new StorageManager({ backend: clientStorageBackend })
+    const clientModules = {
+        todoList: new TodoListStorage({ storageManager: clientStorageManager }),
+        clientSyncLog: new ClientSyncLogStorage({ storageManager: clientStorageManager }),
     }
-    const storageManager = new StorageManager({ backend: storageBackend })
+
+    registerModuleMapCollections(clientStorageManager.registry, clientModules)
+    await clientStorageManager.finishInitialization()
+
+    const serverStorageManager = new StorageManager({ backend: serverStorageBackend })
+    const serverModules = {
+        sharedSyncLog: new SharedSyncLogStorage({ storageManager: serverStorageManager })
+    }
+
+    registerModuleMapCollections(serverStorageManager.registry, serverModules)
+    await serverStorageManager.finishInitialization()
+
     const storage : Storage = {
-        manager: storageManager,
+        manager: clientStorageManager,
         modules: {
-            todoList: new TodoListStorage({ storageManager }),
-            clientSyncLog: new ClientSyncLogStorage({ storageManager }),
-            sharedSyncLog: new SharedSyncLogStorage({ storageManager })
+            ...clientModules,
+            ...serverModules,
         }
     }
-    registerModuleMapCollections(storageManager.registry, storage.modules as any)
-    await storageManager.finishInitialization()
 
     const pkMiddleware = new CustomAutoPkMiddleware({ pkGenerator: () => {
         console.log('generating id')
         return uuid()
     } })
     const collectionsToSync = getCollectionsToSync(storage, STORAGE_MODULE_INFO)
-    pkMiddleware.setup({ storageRegistry: storageManager.registry, collections: collectionsToSync })
+    pkMiddleware.setup({ storageRegistry: clientStorageManager.registry, collections: collectionsToSync })
 
     const syncLoggingMiddleware = new SyncLoggingMiddleware({
-        storageManager,
+        storageManager: clientStorageManager,
         clientSyncLog: storage.modules.clientSyncLog,
         includeCollections: collectionsToSync
     })
 
-    storageManager.setMiddleware([
+    clientStorageManager.setMiddleware([
         pkMiddleware,
         syncLoggingMiddleware
     ])
 
     return storage
+}
+
+export function createStorageBackends(options : { backend: BackendType, dbName: string }) {
+    let clientStorageBackend: StorageBackend
+    let serverStorageBackend: StorageBackend
+    if (options.backend === 'memory') {
+        clientStorageBackend = new DexieStorageBackend({ dbName: options.dbName, idbImplementation: inMemory() })
+        serverStorageBackend = new DexieStorageBackend({ dbName: 'syncServer', idbImplementation: inMemory() })
+    }
+    else if (options.backend == 'client') {
+        clientStorageBackend = new DexieStorageBackend({ dbName: options.dbName })
+        serverStorageBackend = new DexieStorageBackend({ dbName: 'syncServer' })
+    }
+    else {
+        throw new Error(`Tried to create storage with unknown backend: ${options.backend}`)
+    }
+    return { clientStorageBackend, serverStorageBackend }
 }
 
 export function getCollectionsToSync(storage : Storage, moduleInfo : StorageModuleInfo) : string[] {

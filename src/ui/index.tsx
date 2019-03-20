@@ -13,8 +13,15 @@ import App from './containers/app';
 import './index.css';
 import Routes from './routes';
 
-export default function runUi(options : {services : Services, storage : Storage, history : history.History}) {
+export function runUI(options : {services : Services, storage : Storage, history : history.History}) {
     ReactDOM.render((<App services={options.services} storage={options.storage}>
         <Routes history={options.history} services={options.services} storage={options.storage} />
     </App>), document.getElementById('root'))
+}
+
+export function destroyUI() {
+    const rootElement = document.getElementById('root')
+    if (rootElement) {
+        ReactDOM.unmountComponentAtNode(rootElement)
+    }
 }
