@@ -52,7 +52,7 @@ export class TodoListStorage extends StorageModule {
                 operation: 'updateObject',
                 collection: 'todoItem',
                 args: [
-                    { id: 'id:pk' },
+                    { id: '$id:pk' },
                     { done: '$done:boolean' }
                 ]
             }
@@ -65,7 +65,7 @@ export class TodoListStorage extends StorageModule {
             return defaultList
         }
 
-        const { object: list } : { object : TodoList } = await this.operation('createList', { label: 'Storex Sync demo Todo List' })
+        const { object: list } : { object : TodoList } = await this.operation('createList', { label: options.defaultLabel })
         const items : TodoItem[] = [
             await this.addListItem({ label: 'Cook spam', done: true }, { list }),
             await this.addListItem({ label: 'Buy eggs', done: false }, { list }),
