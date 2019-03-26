@@ -5,7 +5,7 @@ import { Storage } from "../storage/types";
 export default class SyncService {
     constructor(private options : { storage : Storage }) {}
 
-    async forceSync(options : { deviceId : string }) {
+    async forceSync(options : { deviceId : any }) {
         const { storage } = this.options
         
         await doSync({
@@ -14,7 +14,7 @@ export default class SyncService {
             storageManager: storage.manager,
             reconciler: reconcileSyncLog,
             now: new Date().getTime(),
-            userId: '1',
+            userId: 1,
             deviceId: options.deviceId,
         })
     }

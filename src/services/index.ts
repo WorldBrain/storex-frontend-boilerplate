@@ -8,7 +8,7 @@ export function createServices(storage : Storage, options : {backend : BackendTy
         return {
             sync: new SyncService({ storage })
         }
-    } else if (options.backend === 'client') {
+    } else if (options.backend === 'client' || options.backend === 'client-with-local-sync') {
         return {
             sync: new SyncService({ storage })
         }

@@ -1,9 +1,12 @@
 import uuid from 'uuid/v1'
 
-import StorageManager, { StorageBackend } from "@worldbrain/storex";
+import StorageManager, { StorageBackend, StorageRegistry } from "@worldbrain/storex";
 import { DexieStorageBackend } from "@worldbrain/storex-backend-dexie";
 import inMemory from "@worldbrain/storex-backend-dexie/lib/in-memory";
+
 import { registerModuleMapCollections, StorageModule } from "@worldbrain/storex-pattern-modules";
+import { StorexGraphQLClient, storexGraphQLClientLogger } from "@worldbrain/storex-graphql-client"
+
 import { BackendType } from "../types";
 
 import { CustomAutoPkMiddleware } from '@worldbrain/storex-sync/lib/custom-auto-pk'
@@ -16,13 +19,14 @@ import { Storage, StorageModules } from "./types";
 import { TodoListStorage } from "./modules/todo-list";
 import { StorageMiddleware } from '@worldbrain/storex/lib/types/middleware';
 import { SharedSyncLog } from '@worldbrain/storex-sync/lib/shared-sync-log';
+import { createSharedSyncLogConfig } from '@worldbrain/storex-sync/lib/shared-sync-log/types';
 
 export type StorageModuleInfo = {[key in keyof StorageModules]? : { sync: boolean }}
 export const STORAGE_MODULE_INFO : StorageModuleInfo = {
     todoList: { sync: true },
 }
 
-export async function createStorage(options : { backend : BackendType, dbName : string }) : Promise<Storage> {
+export async function createStorage(options : { backend : BackendType, dbName : string, graphQLEndpoint? : string, debugGraphQL? : boolean }) : Promise<Storage> {
     const { clientStorageBackend, serverStorageBackend } = createStorageBackends(options)
 
     const clientStorageManager = new StorageManager({ backend: clientStorageBackend })
@@ -37,17 +41,36 @@ export async function createStorage(options : { backend : BackendType, dbName : 
     let serverModules : { sharedSyncLog : SharedSyncLog }
     if (serverStorageBackend) {
         const serverStorageManager = new StorageManager({ backend: serverStorageBackend })
-        serverModules = {
-            sharedSyncLog: new SharedSyncLogStorage({ storageManager: serverStorageManager })
+        const serverStorageModules = {
+            sharedSyncLog: new SharedSyncLogStorage({ storageManager: serverStorageManager, autoPkType: 'int' })
         }
+        serverModules = serverStorageModules
+
+        registerModuleMapCollections(serverStorageManager.registry, serverStorageModules)
+        await serverStorageManager.finishInitialization()
     } else {
+        if (!options.graphQLEndpoint) {
+            throw new Error(`Tried to initialize storage with sync without configuring GraphQL endpoint`)
+        }
+
+        const storageRegistry = new StorageRegistry()
+        const sharedSyncLog = { getConfig: () => createSharedSyncLogConfig({ autoPkType: 'int' }) }
+        registerModuleMapCollections(storageRegistry, { sharedSyncLog })
+
+        const observer = options.debugGraphQL ? storexGraphQLClientLogger({ eventTypes: 'all' }) : undefined
+        const graphQLClient = new StorexGraphQLClient({
+            endpoint: options.graphQLEndpoint,
+            modules: {
+                sharedSyncLog,
+            },
+            storageRegistry,
+            observer,
+            fetch: typeof window !== 'undefined' ? window.fetch.bind(window) : undefined
+        })
         serverModules = {
-            sharedSyncLog: null as any
+            sharedSyncLog: graphQLClient.getModule<SharedSyncLog>('sharedSyncLog')
         }
     }
-
-    registerModuleMapCollections(serverStorageManager.registry, serverModules)
-    await serverStorageManager.finishInitialization()
 
     const storage : Storage = {
         manager: clientStorageManager,
@@ -97,7 +120,9 @@ export function createStorageBackends(options : { backend: BackendType, dbName: 
         serverStorageBackend = new DexieStorageBackend({ dbName: 'syncServer', idbImplementation: inMemory() }) as any
     } else if (options.backend === 'client' || options.backend === 'client-with-local-sync') {
         clientStorageBackend = new DexieStorageBackend({ dbName: options.dbName }) as any
-        serverStorageBackend = new DexieStorageBackend({ dbName: 'syncServer' }) as any
+        if (options.backend === 'client') {
+            serverStorageBackend = new DexieStorageBackend({ dbName: 'syncServer' }) as any
+        }
     } else {
         throw new Error(`Tried to create storage with unknown backend: ${options.backend}`)
     }

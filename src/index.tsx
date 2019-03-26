@@ -8,6 +8,9 @@ import { createStorage } from "./storage";
 export interface MainOptions {
     backend : BackendType
     dbName? : string
+    graphQLEndpoint? : string
+    debugGraphQL? : boolean
+    runSyncTest? : boolean
 }
 
 export async function setup(options : MainOptions) {
@@ -26,11 +29,11 @@ export async function setup(options : MainOptions) {
 }
 
 export async function main(options : MainOptions) {
-    if (process.env.RUN_SYNC_TEST === 'true') {
+    if (options.runSyncTest) {
         await runSyncTest(options)
+    } else {
+        await setup(options)
     }
-
-    await setup(options)
 }
 
 export async function restart(options : MainOptions) {
@@ -39,6 +42,8 @@ export async function restart(options : MainOptions) {
 }
 
 async function runSyncTest(options : MainOptions) {
+    console.log('Running Sync test')
+
     const deleteDB = (name : string) => {
         const request = indexedDB.deleteDatabase(name)
         return new Promise((resolve, reject) => {
@@ -54,16 +59,21 @@ async function runSyncTest(options : MainOptions) {
     const { restart: restart1, storage: storage1, services: services1 } = await setup(options)
     const defaultList = await storage1.modules.todoList.getOrCreateDefaultList({ defaultLabel: 'Storex Sync demo Todo List' })
     await storage1.modules.todoList.setItemDone(defaultList.items[1], true)
-    const device1 = await storage1.modules.sharedSyncLog.createDeviceId({ userId: '1', sharedUntil: 0 })
+    const device1 = await storage1.modules.sharedSyncLog.createDeviceId({ userId: 1, sharedUntil: 0 })
     await services1.sync.forceSync({ deviceId: device1 })
     
     const { restart: restart2, storage: storage2, services: services2 } = await restart1({ dbName: 'syncClient2' })
-    const device2 = await storage2.modules.sharedSyncLog.createDeviceId({ userId: '1', sharedUntil: 0 })
+    const device2 = await storage2.modules.sharedSyncLog.createDeviceId({ userId: 1, sharedUntil: 0 })
     await services2.sync.forceSync({ deviceId: device2 })
     await restart2({})
 }
 
-main({backend: process.env['REACT_APP_BACKEND'] as BackendType})
+main({
+    backend: process.env['REACT_APP_BACKEND'] as BackendType,
+    graphQLEndpoint: process.env['REACT_APP_GRAPHQL_ENDPOINT'],
+    debugGraphQL: process.env['REACT_APP_GRAPHQL_DEBUG'] === 'true',
+    runSyncTest: process.env['REACT_APP_RUN_SYNC_TEST'] === 'true',
+})
 
 // Add item from console:
 // const list = await storage.modules.todoList.getOrCreateDefaultList()
