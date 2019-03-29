@@ -26,7 +26,10 @@ export const STORAGE_MODULE_INFO : StorageModuleInfo = {
     todoList: { sync: true },
 }
 
-export async function createStorage(options : { backend : BackendType, dbName : string, graphQLEndpoint? : string, debugGraphQL? : boolean }) : Promise<Storage> {
+export async function createStorage(options : {
+    backend : BackendType, dbName : string, graphQLEndpoint? : string, debugGraphQL? : boolean,
+    version? : Date
+}) : Promise<Storage> {
     const { clientStorageBackend, serverStorageBackend } = createStorageBackends(options)
 
     const clientStorageManager = new StorageManager({ backend: clientStorageBackend })
@@ -35,7 +38,7 @@ export async function createStorage(options : { backend : BackendType, dbName : 
         clientSyncLog: new ClientSyncLogStorage({ storageManager: clientStorageManager }),
     }
 
-    registerModuleMapCollections(clientStorageManager.registry, clientModules)
+    registerModuleMapCollections(clientStorageManager.registry, clientModules, { version: options.version })
     await clientStorageManager.finishInitialization()
 
     let serverModules : { sharedSyncLog : SharedSyncLog }
@@ -81,7 +84,6 @@ export async function createStorage(options : { backend : BackendType, dbName : 
     }
 
     const pkMiddleware = new CustomAutoPkMiddleware({ pkGenerator: () => {
-        console.log('generating id')
         return uuid()
     } })
     const collectionsToSync = getCollectionsToSync(storage, STORAGE_MODULE_INFO)

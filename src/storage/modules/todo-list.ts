@@ -1,14 +1,17 @@
 import { StorageModule, StorageModuleConfig } from '@worldbrain/storex-pattern-modules'
 import { TodoList, TodoItem } from '../../ui/types/todo-list';
+import history from './todo-list.history'
+import { withHistory } from './utils';
 
 export class TodoListStorage extends StorageModule {
-    getConfig = () : StorageModuleConfig => ({
+    getConfig = () : StorageModuleConfig => withHistory({
+        history,
         collections: {
             todoList: {
-                version: new Date('2018-03-03'),
+                version: new Date('2018-03-04'),
                 fields: {
                     label: { type: 'text' },
-                    default: { type: 'boolean', optional: true }
+                    default: { type: 'boolean' }
                 }
             },
             todoItem: {
@@ -65,7 +68,7 @@ export class TodoListStorage extends StorageModule {
             return defaultList
         }
 
-        const { object: list } : { object : TodoList } = await this.operation('createList', { label: options.defaultLabel })
+        const { object: list } : { object : TodoList } = await this.operation('createList', { label: options.defaultLabel, default: true })
         const items : TodoItem[] = [
             await this.addListItem({ label: 'Cook spam', done: true }, { list }),
             await this.addListItem({ label: 'Buy eggs', done: false }, { list }),
@@ -79,7 +82,7 @@ export class TodoListStorage extends StorageModule {
             return null
         }
 
-        const defaultList = allLists[0]
+        const defaultList = allLists.filter((list : TodoList) => list.default)[0]
         const items = await this.operation('findListItems', { list: defaultList.id })
         return { ...defaultList, items }
     }

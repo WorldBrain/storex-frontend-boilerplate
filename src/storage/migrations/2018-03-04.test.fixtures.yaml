@@ -1,0 +1,15 @@
+base:
+  version: 2018-03-03
+  objects:
+    todoLists:
+      - $store: default
+        label: My default list
+        default: true
+        items:
+          - label: First item on default list
+            done: true
+      - $store: non-default
+        label: My non-default list
+        items:
+          - label: First item on non-default list
+            done: false
