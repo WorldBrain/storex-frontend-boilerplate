@@ -9,6 +9,7 @@
     "@types/react-dom": "16.8.2",
     "@worldbrain/storex": "^0.3.4",
     "@worldbrain/storex-backend-dexie": "^0.2.2",
+    "@worldbrain/storex-backend-firestore": "^0.1.1",
     "@worldbrain/storex-pattern-modules": "^0.2.0",
     "@worldbrain/storex-schema-migrations": "^0.1.0",
     "@worldbrain/storex-sync": "^0.1.1",
