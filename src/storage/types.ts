@@ -4,7 +4,8 @@ import { SharedSyncLog } from "@worldbrain/storex-sync/lib/shared-sync-log";
 import { TodoListStorage } from "./modules/todo-list";
 
 export interface Storage {
-    manager : StorageManager
+    clientManager : StorageManager
+    serverManager? : StorageManager
     modules : StorageModules
 }
 

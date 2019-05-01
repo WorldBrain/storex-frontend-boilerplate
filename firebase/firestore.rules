@@ -1,0 +1,97 @@
+service cloud.firestore {
+    match /databases/{database}/documents {
+        match /sharedSyncLogDeviceInfo/{userId} {
+            match /devices/{sharedSyncLogDeviceInfo} {
+                allow list: if 
+                  // Onwnership rules
+                  request.auth.uid == userId
+                ;
+                allow get: if 
+                  // Onwnership rules
+                  request.auth.uid == userId
+                ;
+                allow create: if 
+                  // Type checks
+                  request.resource.data.sharedUntil is timestamp &&
+                
+                
+                  // Validation rules
+                  ((request.resource.data.updatedWhen == null) || (request.resource.data.updatedWhen == request.time)) &&
+                
+                
+                  // Onwnership rules
+                  request.auth.uid == userId
+                ;
+                allow update: if 
+                  // Type checks
+                  request.resource.data.sharedUntil is timestamp &&
+                
+                
+                  // Validation rules
+                  ((request.resource.data.updatedWhen == null) || (request.resource.data.updatedWhen == request.time)) &&
+                
+                
+                  // Onwnership rules
+                  request.auth.uid == userId
+                ;
+                allow delete: if 
+                  // Onwnership rules
+                  request.auth.uid == userId
+                ;
+            }
+        }
+        match /sharedSyncLogEntryBatch/{userId} {
+            match /entries/{sharedSyncLogEntryBatch} {
+                allow list: if 
+                  // Onwnership rules
+                  request.auth.uid == userId
+                ;
+                allow get: if 
+                  // Onwnership rules
+                  request.auth.uid == userId
+                ;
+                allow create: if 
+                  // Type checks
+                  request.resource.data.deviceId is number &&
+                  request.resource.data.createdOn is timestamp &&
+                  request.resource.data.sharedOn is timestamp &&
+                  request.resource.data.data is string &&
+                
+                
+                  // Onwnership rules
+                  request.auth.uid == userId
+                ;
+                allow delete: if 
+                  // Onwnership rules
+                  request.auth.uid == userId
+                ;
+            }
+        }
+        match /sharedSyncLogSeenEntry/{userId} {
+            match /entries/{sharedSyncLogSeenEntry} {
+                allow list: if 
+                  // Onwnership rules
+                  request.auth.uid == userId
+                ;
+                allow get: if 
+                  // Onwnership rules
+                  request.auth.uid == userId
+                ;
+                allow create: if 
+                  // Type checks
+                  request.resource.data.creatorDeviceId is number &&
+                  request.resource.data.retrieverDeviceId is number &&
+                  request.resource.data.createdOn is timestamp &&
+                
+                
+                  // Onwnership rules
+                  request.auth.uid == userId
+                ;
+                allow delete: if 
+                  // Onwnership rules
+                  request.auth.uid == userId
+                ;
+            }
+        }
+    }
+}

@@ -11,10 +11,10 @@ describe('Schema migrations: Version 2018-03-04', () => {
     it('should correctly execute', async () => {
         const storage = await createStorage({ backend: 'memory', dbName: 'unittest' })
         const fixtures = jsYaml.safeLoad(fs.readFileSync(path.join(__dirname, '2018-03-04.test.fixtures.yaml')).toString())
-        await loadFixtures({ storageManager: storage.manager, fixtures: fixtures.base.objects })
+        await loadFixtures({ storageManager: storage.clientManager, fixtures: fixtures.base.objects })
 
         const migrationSelection : MigrationSelection = { fromVersion: new Date('2018-03-03'), toVersion: new Date('2018-03-04') }
         const migration = selectMigrationFromList(migrationSelection, migrations)
-        await executeMigration(storage.manager.registry, storage.manager, migrationSelection, migration.config, { data: true })
+        await executeMigration(storage.clientManager.registry, storage.clientManager, migrationSelection, migration.config, { data: true })
     })
 })

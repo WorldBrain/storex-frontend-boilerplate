@@ -11,7 +11,7 @@ export default class SyncService {
         await doSync({
             clientSyncLog: storage.modules.clientSyncLog,
             sharedSyncLog: storage.modules.sharedSyncLog,
-            storageManager: storage.manager,
+            storageManager: storage.clientManager,
             reconciler: reconcileSyncLog,
             now: new Date().getTime(),
             userId: 1,

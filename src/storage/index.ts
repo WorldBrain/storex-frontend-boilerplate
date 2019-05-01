@@ -41,9 +41,10 @@ export async function createStorage(options : {
     registerModuleMapCollections(clientStorageManager.registry, clientModules, { version: options.version })
     await clientStorageManager.finishInitialization()
 
+    let serverStorageManager : StorageManager | undefined
     let serverModules : { sharedSyncLog : SharedSyncLog }
     if (serverStorageBackend) {
-        const serverStorageManager = new StorageManager({ backend: serverStorageBackend })
+        serverStorageManager = new StorageManager({ backend: serverStorageBackend })
         const serverStorageModules = {
             sharedSyncLog: new SharedSyncLogStorage({ storageManager: serverStorageManager, autoPkType: 'int' })
         }
@@ -76,7 +77,8 @@ export async function createStorage(options : {
     }
 
     const storage : Storage = {
-        manager: clientStorageManager,
+        clientManager: clientStorageManager,
+        serverManager: serverStorageManager,
         modules: {
             ...clientModules,
             ...serverModules,
