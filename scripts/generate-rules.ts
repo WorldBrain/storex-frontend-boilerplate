@@ -9,7 +9,7 @@ export async function main() {
         throw new Error(`Please provide output file path as only argument`)
     }
 
-    const storage = await createStorage({ backend: 'memory', dbName: 'temp' })
+    const storage = await createStorage({ backend: 'memory-with-firestore-sync', dbName: 'temp' })
     if (!storage.serverManager) {
         throw new Error(`Could not find server storage manager`)
     }

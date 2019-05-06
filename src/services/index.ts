@@ -2,17 +2,22 @@ import { BackendType } from "../types";
 import { Storage } from "../storage/types";
 import { Services } from "./types";
 import SyncService from "./sync";
+import { FirebaseAuth } from "./auth/firebase";
+import { AuthService } from "./auth/types";
+import { MemoryAuth } from "./auth/memory";
 
-export function createServices(storage : Storage, options : {backend : BackendType}) : Services {
-    if (options.backend === 'memory') {
-        return {
-            sync: new SyncService({ storage })
-        }
-    } else if (options.backend === 'client' || options.backend === 'client-with-local-sync') {
-        return {
-            sync: new SyncService({ storage })
-        }
+export function createServices(storage : Storage, options : { backend : BackendType }) : Services {
+    let auth : AuthService
+    if (options.backend === 'client-with-firestore-sync') {
+        auth = new FirebaseAuth()
     } else {
-        throw new Error(`Tried to create services with unknown backend: '${options.backend}'`)
+        auth = new MemoryAuth({ idType: 'number' })
     }
+
+    const services : Services = {
+        auth,
+        sync: new SyncService({ storage, auth })
+    }
+
+    return services
 }

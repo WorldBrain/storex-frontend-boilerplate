@@ -57,13 +57,14 @@ async function runSyncTest(options : MainOptions) {
     await deleteDB('syncServer')
     
     const { restart: restart1, storage: storage1, services: services1 } = await setup(options)
+    await services1.auth.waitForAuthentication()
     const defaultList = await storage1.modules.todoList.getOrCreateDefaultList({ defaultLabel: 'Storex Sync demo Todo List' })
     await storage1.modules.todoList.setItemDone(defaultList.items[1], true)
-    const device1 = await storage1.modules.sharedSyncLog.createDeviceId({ userId: 1, sharedUntil: 0 })
+    const device1 = await storage1.modules.sharedSyncLog.createDeviceId({ userId: services1.auth.getUserId() as string | number, sharedUntil: null })
     await services1.sync.forceSync({ deviceId: device1 })
     
     const { restart: restart2, storage: storage2, services: services2 } = await restart1({ dbName: 'syncClient2' })
-    const device2 = await storage2.modules.sharedSyncLog.createDeviceId({ userId: 1, sharedUntil: 0 })
+    const device2 = await storage2.modules.sharedSyncLog.createDeviceId({ userId: services2.auth.getUserId() as string | number, sharedUntil: null })
     await services2.sync.forceSync({ deviceId: device2 })
     await restart2({})
 }

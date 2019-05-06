@@ -34,7 +34,7 @@
     "build": "react-scripts build",
     "test": "TS_NODE_PROJECT=tsconfig.mocha.json mocha --require ts-node/register 'src/**/*.test.ts'",
     "test:watch": "TS_NODE_PROJECT=tsconfig.mocha.json mocha --watch --watch-extensions ts --require ts-node/register 'src/**/*.test.ts'",
-    "firebase": "firebase",
+    "firebase": "cd firebase && firebase",
     "generate-rules": "TS_NODE_PROJECT=tsconfig.mocha.json ts-node scripts/generate-rules.ts ./firebase/firestore.rules",
     "create:ui-container": "cp -r code-templates/ui-element src/ui/containers/${ELEMENT}",
     "eject": "react-scripts eject"

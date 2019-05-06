@@ -1,11 +1,15 @@
 import uuid from 'uuid/v1'
 
 import StorageManager, { StorageBackend, StorageRegistry } from "@worldbrain/storex";
+import { registerModuleMapCollections, StorageModule } from "@worldbrain/storex-pattern-modules";
+
 import { DexieStorageBackend } from "@worldbrain/storex-backend-dexie";
 import inMemory from "@worldbrain/storex-backend-dexie/lib/in-memory";
 
-import { registerModuleMapCollections, StorageModule } from "@worldbrain/storex-pattern-modules";
 import { StorexGraphQLClient, storexGraphQLClientLogger } from "@worldbrain/storex-graphql-client"
+
+import firebase from 'firebase'
+import { FirestoreStorageBackend } from '@worldbrain/storex-backend-firestore'
 
 import { BackendType } from "../types";
 
@@ -46,7 +50,10 @@ export async function createStorage(options : {
     if (serverStorageBackend) {
         serverStorageManager = new StorageManager({ backend: serverStorageBackend })
         const serverStorageModules = {
-            sharedSyncLog: new SharedSyncLogStorage({ storageManager: serverStorageManager, autoPkType: 'int' })
+            sharedSyncLog: new SharedSyncLogStorage({
+                storageManager: serverStorageManager,
+                autoPkType: options.backend.indexOf('firestore') === -1 ? 'int' : 'string'
+            })
         }
         serverModules = serverStorageModules
 
@@ -127,6 +134,16 @@ export function createStorageBackends(options : { backend: BackendType, dbName: 
         if (options.backend === 'client') {
             serverStorageBackend = new DexieStorageBackend({ dbName: 'syncServer' }) as any
         }
+    } else if (options.backend === 'memory-with-firestore-sync' || options.backend === 'client-with-firestore-sync') {
+        if (options.backend === 'memory-with-firestore-sync') {
+            clientStorageBackend = new DexieStorageBackend({ dbName: options.dbName, idbImplementation: inMemory() }) as any
+        } else {
+            clientStorageBackend = new DexieStorageBackend({ dbName: options.dbName }) as any
+        }
+        if (!firebase.apps.length) {
+            firebase.initializeApp(require('../private/firebase').default)
+        }
+        serverStorageBackend = new FirestoreStorageBackend({ firebase: firebase as any, firestore: firebase.firestore() })
     } else {
         throw new Error(`Tried to create storage with unknown backend: ${options.backend}`)
     }
