@@ -24,6 +24,7 @@
     "react-dom": "^16.8.4",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.8",
+    "simple-signalling": "^0.2.0",
     "typeface-nunito": "^0.0.72",
     "typeface-open-sans": "^0.0.54",
     "typescript": "3.3.3333",
@@ -35,7 +36,7 @@
     "test": "TS_NODE_PROJECT=tsconfig.mocha.json mocha --require ts-node/register 'src/**/*.test.ts'",
     "test:watch": "TS_NODE_PROJECT=tsconfig.mocha.json mocha --watch --watch-extensions ts --require ts-node/register 'src/**/*.test.ts'",
     "firebase": "cd firebase && firebase",
-    "generate-rules": "TS_NODE_PROJECT=tsconfig.mocha.json ts-node scripts/generate-rules.ts ./firebase/firestore.rules",
+    "generate-rules": "TS_NODE_PROJECT=tsconfig.mocha.json ts-node scripts/generate-rules.ts ./firebase/",
     "create:ui-container": "cp -r code-templates/ui-element src/ui/containers/${ELEMENT}",
     "eject": "react-scripts eject"
   },

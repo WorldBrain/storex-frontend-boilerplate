@@ -143,7 +143,7 @@ export function createStorageBackends(options : { backend: BackendType, dbName: 
         if (!firebase.apps.length) {
             firebase.initializeApp(require('../private/firebase').default)
         }
-        serverStorageBackend = new FirestoreStorageBackend({ firebase: firebase as any, firestore: firebase.firestore() })
+        serverStorageBackend = new FirestoreStorageBackend({ firebase: firebase as any, firestore: firebase.firestore() as any })
     } else {
         throw new Error(`Tried to create storage with unknown backend: ${options.backend}`)
     }
