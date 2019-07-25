@@ -1,3 +1,4 @@
+import queryString, { ParsedQuery } from 'query-string'
 import createBrowserHistory from "history/createBrowserHistory";
 import { runUI, destroyUI } from './ui'
 import * as serviceWorker from './serviceWorker'
@@ -7,10 +8,12 @@ import { createStorage } from "./storage";
 
 export interface MainOptions {
     backend : BackendType
+    queryParams : ParsedQuery<string | number | boolean>
     dbName? : string
     graphQLEndpoint? : string
     debugGraphQL? : boolean
-    runSyncTest? : boolean
+    runInitialSyncTest? : boolean
+    runIncrementalSyncTest? : boolean
 }
 
 export async function setup(options : MainOptions) {
@@ -29,8 +32,10 @@ export async function setup(options : MainOptions) {
 }
 
 export async function main(options : MainOptions) {
-    if (options.runSyncTest) {
-        await runSyncTest(options)
+    if (options.runIncrementalSyncTest) {
+        await runIncrementalSyncTest(options)
+    } else if (options.runInitialSyncTest) {
+        await runInitialSyncTest(options)
     } else {
         await setup(options)
     }
@@ -41,16 +46,36 @@ export async function restart(options : MainOptions) {
     return setup(options)
 }
 
-async function runSyncTest(options : MainOptions) {
-    console.log('Running Sync test')
-
-    const deleteDB = (name : string) => {
-        const request = indexedDB.deleteDatabase(name)
-        return new Promise((resolve, reject) => {
-            request.onsuccess = resolve
-            request.onerror = reject
-        })
+async function runInitialSyncTest(options : MainOptions) {
+    console.log('Running Initial Sync test')
+    
+    const deviceId = options.queryParams['deviceId'];
+    if (deviceId === 'one') {
+        await deleteDB('syncClient1')
+        const { storage, services } = await setup(options)
+        const defaultList = await storage.modules.todoList.getOrCreateDefaultList({ defaultLabel: 'Storex Sync demo Todo List' })
+        await storage.modules.todoList.setItemDone(defaultList.items[1], true)
+        console.log('Requesting initial sync')
+        const { initialMessage } = await services.sync.requestInitialSync(storage, { reporter: 'console' })
+        localStorage.setItem('initialMessage', initialMessage)
+        console.log('Wrote initial message to local storage')
+    } else if (deviceId === 'two') {
+        await deleteDB('syncClient2')
+        const { restart, storage, services } = await setup({ ...options, dbName: 'syncClient2' })
+        const initialMessage = localStorage.getItem('initialMessage')
+        if (!initialMessage) {
+            throw new Error(`To test the initial Sync as a receiver, first initialize the sender`)
+        }
+        localStorage.removeItem('initialMessage')
+        await services.sync.answerInitialSync(storage, { initialMessage, reporter: 'console' })
+        await restart(options)
+    } else {
+        throw new Error(`Invalid deviceId passed in URL: ${deviceId}`)
     }
+}
+
+async function runIncrementalSyncTest(options : MainOptions) {
+    console.log('Running Incremental Sync test')
 
     await deleteDB('syncClient1')
     await deleteDB('syncClient2')
@@ -71,10 +96,20 @@ async function runSyncTest(options : MainOptions) {
 
 main({
     backend: process.env['REACT_APP_BACKEND'] as BackendType,
+    queryParams: queryString.parse(window.location.search, { parseBooleans: true, parseNumbers: true }),
     graphQLEndpoint: process.env['REACT_APP_GRAPHQL_ENDPOINT'],
     debugGraphQL: process.env['REACT_APP_GRAPHQL_DEBUG'] === 'true',
-    runSyncTest: process.env['REACT_APP_RUN_SYNC_TEST'] === 'true',
+    runInitialSyncTest: process.env['REACT_APP_RUN_INIT_SYNC_TEST'] === 'true',
+    runIncrementalSyncTest: process.env['REACT_APP_RUN_INCR_SYNC_TEST'] === 'true',
 })
+
+function deleteDB(name : string) {
+    const request = indexedDB.deleteDatabase(name)
+    return new Promise((resolve, reject) => {
+        request.onsuccess = resolve
+        request.onerror = reject
+    })
+}
 
 // Add item from console:
 // const list = await storage.modules.todoList.getOrCreateDefaultList()

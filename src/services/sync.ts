@@ -15,10 +15,16 @@ import { getCollectionsToSync } from '../storage/utils';
 
 interface InitialSyncInfo {
     signalChannel : SignalChannel,
-    promise : Promise<void>
-    events : TypedEmitter<FastSyncEvents>
+    execute : () => Promise<void>
+    events : TypedEmitter<FastSyncEvents & InitialSyncEvents>
     senderFastSync? : FastSyncSender,
     receiverFastSync? : FastSyncReceiver,
+}
+
+interface InitialSyncEvents {
+    connecting : {},
+    connected : {},
+    finished : {},
 }
 
 export default class SyncService {
@@ -44,7 +50,7 @@ export default class SyncService {
         })
     }
 
-    async requestInitialSync(storage : Storage) {
+    async requestInitialSync(storage : Storage, options? : { reporter? : 'console' | ((event : any) => void) }) {
         const role = 'sender'
         const { signalTransport, initialMessage } = await this._createSignalTransport(role)
         this.initialSyncInfo = await this._setupInitialSync({
@@ -54,10 +60,16 @@ export default class SyncService {
             deviceId: 'device one',
             storage,
         })
+        if (options && options.reporter) {
+            const reporter = options.reporter === 'console' ? console.log.bind(console) : options.reporter
+            subscribeReporter(this.initialSyncInfo.events, reporter)
+        }
+        this.initialSyncInfo.execute()
+
         return { initialMessage, initialSyncInfo: this.initialSyncInfo }
     }
 
-    async answerInitialSync(storage : Storage, options : { initialMessage : string }) {
+    async answerInitialSync(storage : Storage, options : { initialMessage : string, reporter? : 'console' | ((event : any) => void) }) {
         const role = 'receiver'
         const { signalTransport } = await this._createSignalTransport(role)
         this.initialSyncInfo = await this._setupInitialSync({
@@ -67,6 +79,12 @@ export default class SyncService {
             deviceId: 'device two',
             storage,
         })
+        if (options && options.reporter) {
+            const reporter = options.reporter === 'console' ? console.log.bind(console) : options.reporter
+            subscribeReporter(this.initialSyncInfo.events, reporter)
+        }
+        this.initialSyncInfo.execute()
+
         return { initialSyncInfo: this.initialSyncInfo }
     }
 
@@ -87,11 +105,11 @@ export default class SyncService {
         storage : Storage
     }) : Promise<InitialSyncInfo> {
         const signalChannel = await options.signalTransport.openChannel(options)
-        const peer = new Peer({ initiator: false })
+        const peer = new Peer({ initiator: options.role === 'receiver' })
 
         let senderFastSync : FastSyncSender | undefined
         let receiverFastSync : FastSyncReceiver | undefined
-        let fastSync : { execute : () => Promise<void>, events : TypedEmitter<FastSyncEvents> }
+        let fastSync : { execute : () => Promise<void>, events : TypedEmitter<FastSyncEvents & InitialSyncEvents> }
         if (options.role === 'sender') {
             const senderChannel = new WebRTCFastSyncSenderChannel({ peer })
             senderFastSync = new FastSyncSender({
@@ -106,17 +124,35 @@ export default class SyncService {
             })
             fastSync = receiverFastSync
         }
-        const promise = (async () => {
-            await signalSimplePeer({ signalChannel, simplePeer: peer }),
-            await signalChannel.release()
-            await fastSync.execute()
-        })()
+
+        let executePromise : Promise<void>
+        const execute = () => {
+            if (executePromise) {
+                return executePromise
+            }
+            executePromise = (async () => {
+                fastSync.events.emit('connecting', {})
+                await signalSimplePeer({ signalChannel, simplePeer: peer }),
+                await signalChannel.release()
+                fastSync.events.emit('connected', {})
+                await fastSync.execute()
+                fastSync.events.emit('finished', {})
+            })()
+            return executePromise
+        }
+
         return {
             signalChannel,
-            promise,
+            execute,
             events: fastSync.events,
             senderFastSync,
             receiverFastSync,
         }
+    }
+}
+
+export function subscribeReporter(events : TypedEmitter<FastSyncEvents & InitialSyncEvents>, reporter : (eventName : any, event : any) => void) {
+    for (const eventName of ['connecting', 'connected', 'prepared', 'finished'] as Array<keyof (FastSyncEvents & InitialSyncEvents)>) {
+        events.on(eventName, (event) => reporter(eventName, event))
     }
 }

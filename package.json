@@ -20,6 +20,7 @@
     "firebase": "^5.11.0",
     "font-awesome": "^4.7.0",
     "node-sass": "^4.11.0",
+    "query-string": "^6.8.1",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "react-router-dom": "^4.3.1",
