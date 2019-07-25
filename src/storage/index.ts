@@ -18,17 +18,14 @@ import { SyncLoggingMiddleware } from '@worldbrain/storex-sync/lib/logging-middl
 import { ClientSyncLogStorage } from '@worldbrain/storex-sync/lib/client-sync-log'
 import { SharedSyncLogStorage } from '@worldbrain/storex-sync/lib/shared-sync-log/storex'
 
-import { Storage, StorageModules } from "./types";
+import { Storage, StorageModules, StorageModuleInfo } from "./types";
 
 import { TodoListStorage } from "./modules/todo-list";
 import { StorageMiddleware } from '@worldbrain/storex/lib/types/middleware';
 import { SharedSyncLog } from '@worldbrain/storex-sync/lib/shared-sync-log';
 import { createSharedSyncLogConfig } from '@worldbrain/storex-sync/lib/shared-sync-log/types';
-
-export type StorageModuleInfo = {[key in keyof StorageModules]? : { sync: boolean }}
-export const STORAGE_MODULE_INFO : StorageModuleInfo = {
-    todoList: { sync: true },
-}
+import { STORAGE_MODULE_INFO } from './constants';
+import { getCollectionsToSync } from './utils';
 
 export async function createStorage(options : {
     backend : BackendType, dbName : string, graphQLEndpoint? : string, debugGraphQL? : boolean,
@@ -95,7 +92,7 @@ export async function createStorage(options : {
     const pkMiddleware = new CustomAutoPkMiddleware({ pkGenerator: () => {
         return uuid()
     } })
-    const collectionsToSync = getCollectionsToSync(storage, STORAGE_MODULE_INFO)
+    const collectionsToSync = getCollectionsToSync(storage)
     pkMiddleware.setup({ storageRegistry: clientStorageManager.registry, collections: collectionsToSync })
 
     const syncLoggingMiddleware = new SyncLoggingMiddleware({
@@ -148,13 +145,4 @@ export function createStorageBackends(options : { backend: BackendType, dbName: 
         throw new Error(`Tried to create storage with unknown backend: ${options.backend}`)
     }
     return { clientStorageBackend, serverStorageBackend }
-}
-
-export function getCollectionsToSync(storage : Storage, moduleInfo : StorageModuleInfo) : string[] {
-    return Object.entries(STORAGE_MODULE_INFO).map(
-        ([moduleName, moduleInfo]) =>
-        moduleInfo && moduleInfo.sync
-            ? Object.keys(((storage.modules as any)[moduleName] as StorageModule).collections)
-            : []
-    ).reduce((prev, curr) => prev.concat(curr), [])
 }

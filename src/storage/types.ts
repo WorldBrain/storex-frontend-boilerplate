@@ -14,3 +14,5 @@ export interface StorageModules {
     clientSyncLog : ClientSyncLogStorage
     sharedSyncLog : SharedSyncLog
 }
+
+export type StorageModuleInfo = {[key in keyof StorageModules]? : { sync: boolean }}
