@@ -1,10 +1,11 @@
+import pick from 'lodash/pick';
 import TypedEmitter from 'typed-emitter';
 import Peer from 'simple-peer'
 import * as firebase from 'firebase/app'
 import 'firebase/database';
 import { SignalTransport, SignalChannel } from 'simple-signalling/lib/types';
 import { FirebaseSignalTransport } from 'simple-signalling/lib/firebase'
-import { signalSimplePeer } from 'simple-signalling/lib/simple-peer'
+import { signalSimplePeer, SimplePeerSignallingEvents } from 'simple-signalling/lib/simple-peer'
 import { doSync } from '@worldbrain/storex-sync'
 import { FastSyncReceiver, FastSyncSender, FastSyncEvents } from '@worldbrain/storex-sync/lib/fast-sync'
 import { WebRTCFastSyncReceiverChannel, WebRTCFastSyncSenderChannel } from '@worldbrain/storex-sync/lib/fast-sync/channels'
@@ -16,16 +17,22 @@ import { getCollectionsToSync } from '../storage/utils';
 interface InitialSyncInfo {
     signalChannel : SignalChannel,
     execute : () => Promise<void>
-    events : TypedEmitter<FastSyncEvents & InitialSyncEvents>
+    events : TypedEmitter<InitialSyncEvents>
     senderFastSync? : FastSyncSender,
     receiverFastSync? : FastSyncReceiver,
 }
 
-interface InitialSyncEvents {
-    connecting : {},
-    connected : {},
-    finished : {},
-}
+type InitialSyncEvents =
+    FastSyncEvents &
+    SimplePeerSignallingEvents &
+    {
+        connecting : {},
+        releasingSignalChannel : {},
+        connected : {},
+        finished : {},
+    }
+
+type InitialSyncReporter = <EventName extends keyof InitialSyncEvents>(eventName : EventName, event : InitialSyncEvents[EventName]) => void
 
 export default class SyncService {
     private initialSyncInfo? : InitialSyncInfo
@@ -50,7 +57,7 @@ export default class SyncService {
         })
     }
 
-    async requestInitialSync(storage : Storage, options? : { reporter? : 'console' | ((event : any) => void) }) {
+    async requestInitialSync(storage : Storage, options? : { reporter? : 'console' | InitialSyncReporter }) {
         const role = 'sender'
         const { signalTransport, initialMessage } = await this._createSignalTransport(role)
         this.initialSyncInfo = await this._setupInitialSync({
@@ -104,7 +111,7 @@ export default class SyncService {
         signalTransport : SignalTransport, initialMessage : string, deviceId : string
         storage : Storage
     }) : Promise<InitialSyncInfo> {
-        const signalChannel = await options.signalTransport.openChannel(options)
+        const signalChannel = await options.signalTransport.openChannel(pick(options, 'initialMessage', 'deviceId'))
         const peer = new Peer({ initiator: options.role === 'receiver' })
 
         let senderFastSync : FastSyncSender | undefined
@@ -132,7 +139,11 @@ export default class SyncService {
             }
             executePromise = (async () => {
                 fastSync.events.emit('connecting', {})
-                await signalSimplePeer({ signalChannel, simplePeer: peer }),
+                await signalSimplePeer({
+                    signalChannel, simplePeer: peer,
+                    reporter: (eventName, event) => (fastSync.events as any).emit(eventName, event)
+                }),
+                fastSync.events.emit('releasingSignalChannel', {})
                 await signalChannel.release()
                 fastSync.events.emit('connected', {})
                 await fastSync.execute()
@@ -151,8 +162,19 @@ export default class SyncService {
     }
 }
 
-export function subscribeReporter(events : TypedEmitter<FastSyncEvents & InitialSyncEvents>, reporter : (eventName : any, event : any) => void) {
-    for (const eventName of ['connecting', 'connected', 'prepared', 'finished'] as Array<keyof (FastSyncEvents & InitialSyncEvents)>) {
-        events.on(eventName, (event) => reporter(eventName, event))
+export function subscribeReporter(events : TypedEmitter<InitialSyncEvents>, reporter : (eventName : any, event : any) => void) {
+    type AllEvents = {[EventName in keyof InitialSyncEvents] : true}
+    const allEvents : AllEvents = {
+        receivedIncomingSignal: true, processingIncomingSignal: true,
+        queuingOutgoingSignal: true, sendingOutgoingSignal: true,
+        connecting: true, connected: true, prepared: true, finished: true,
+        releasingSignalChannel: true,
+    }
+    const eventCounters : {[EventName in keyof InitialSyncEvents]?: number} = {}
+    for (const eventName of Object.keys(allEvents) as Array<keyof InitialSyncEvents>) {
+        events.on(eventName, (event) => {
+            eventCounters[eventName] = (eventCounters[eventName] || 0) + 1
+            reporter(`${eventName} ${eventCounters[eventName]}`, event)
+        })
     }
 }
