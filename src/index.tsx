@@ -52,13 +52,14 @@ async function runInitialSyncTest(options : MainOptions) {
     const deviceId = options.queryParams['deviceId'];
     if (deviceId === 'one') {
         await deleteDB('syncClient1')
-        const { storage, services } = await setup(options)
+        const { storage, services, restart } = await setup(options)
         const defaultList = await storage.modules.todoList.getOrCreateDefaultList({ defaultLabel: 'Storex Sync demo Todo List' })
         await storage.modules.todoList.setItemDone(defaultList.items[1], true)
         console.log('Requesting initial sync')
         const { initialMessage } = await services.sync.requestInitialSync(storage, { reporter: 'console' })
         localStorage.setItem('initialMessage', initialMessage)
         console.log('Wrote initial message to local storage')
+        await restart({ })
     } else if (deviceId === 'two') {
         await deleteDB('syncClient2')
         const { restart, storage, services } = await setup({ ...options, dbName: 'syncClient2' })
@@ -67,7 +68,8 @@ async function runInitialSyncTest(options : MainOptions) {
             throw new Error(`To test the initial Sync as a receiver, first initialize the sender`)
         }
         localStorage.removeItem('initialMessage')
-        await services.sync.answerInitialSync(storage, { initialMessage, reporter: 'console' })
+        const { syncPromise } = await services.sync.answerInitialSync(storage, { initialMessage, reporter: 'console' })
+        await syncPromise
         await restart(options)
     } else {
         throw new Error(`Invalid deviceId passed in URL: ${deviceId}`)

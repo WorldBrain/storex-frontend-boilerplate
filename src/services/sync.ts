@@ -64,7 +64,7 @@ export default class SyncService {
             role,
             signalTransport,
             initialMessage,
-            deviceId: 'device one',
+            deviceId: 'first',
             storage,
         })
         if (options && options.reporter) {
@@ -83,16 +83,19 @@ export default class SyncService {
             role,
             signalTransport,
             initialMessage: options.initialMessage,
-            deviceId: 'device two',
+            deviceId: 'second',
             storage,
         })
         if (options && options.reporter) {
             const reporter = options.reporter === 'console' ? console.log.bind(console) : options.reporter
             subscribeReporter(this.initialSyncInfo.events, reporter)
         }
-        this.initialSyncInfo.execute()
+        const syncPromise = this.initialSyncInfo.execute()
 
-        return { initialSyncInfo: this.initialSyncInfo }
+        return {
+            initialSyncInfo: this.initialSyncInfo,
+            syncPromise
+        }
     }
 
     _createSignalTransport(role : 'sender' ) : Promise<{ signalTransport : SignalTransport, initialMessage : string }>;
@@ -108,7 +111,7 @@ export default class SyncService {
 
     async _setupInitialSync(options : {
         role : 'sender' | 'receiver',
-        signalTransport : SignalTransport, initialMessage : string, deviceId : string
+        signalTransport : SignalTransport, initialMessage : string, deviceId : 'first' | 'second'
         storage : Storage
     }) : Promise<InitialSyncInfo> {
         const signalChannel = await options.signalTransport.openChannel(pick(options, 'initialMessage', 'deviceId'))
@@ -139,6 +142,7 @@ export default class SyncService {
             }
             executePromise = (async () => {
                 fastSync.events.emit('connecting', {})
+                await signalChannel.connect()
                 await signalSimplePeer({
                     signalChannel, simplePeer: peer,
                     reporter: (eventName, event) => (fastSync.events as any).emit(eventName, event)
@@ -165,6 +169,7 @@ export default class SyncService {
 export function subscribeReporter(events : TypedEmitter<InitialSyncEvents>, reporter : (eventName : any, event : any) => void) {
     type AllEvents = {[EventName in keyof InitialSyncEvents] : true}
     const allEvents : AllEvents = {
+        start: true,
         receivedIncomingSignal: true, processingIncomingSignal: true,
         queuingOutgoingSignal: true, sendingOutgoingSignal: true,
         connecting: true, connected: true, prepared: true, finished: true,
