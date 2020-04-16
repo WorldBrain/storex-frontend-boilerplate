@@ -26,11 +26,12 @@ import { SharedSyncLog } from '@worldbrain/storex-sync/lib/shared-sync-log';
 import { createSharedSyncLogConfig } from '@worldbrain/storex-sync/lib/shared-sync-log/types';
 import { STORAGE_MODULE_INFO } from './constants';
 import { getCollectionsToSync } from './utils';
+import { Services } from '../services/types';
 
-export async function createStorage(options : {
-    backend : BackendType, dbName : string, graphQLEndpoint? : string, debugGraphQL? : boolean,
-    version? : Date
-}) : Promise<Storage> {
+export async function createStorage(options: {
+    backend: BackendType, dbName: string, graphQLEndpoint?: string, debugGraphQL?: boolean,
+    version?: Date
+}): Promise<Storage> {
     const { clientStorageBackend, serverStorageBackend } = createStorageBackends(options)
 
     const clientStorageManager = new StorageManager({ backend: clientStorageBackend })
@@ -42,8 +43,8 @@ export async function createStorage(options : {
     registerModuleMapCollections(clientStorageManager.registry, clientModules, { version: options.version })
     await clientStorageManager.finishInitialization()
 
-    let serverStorageManager : StorageManager | undefined
-    let serverModules : { sharedSyncLog : SharedSyncLog }
+    let serverStorageManager: StorageManager | undefined
+    let serverModules: { sharedSyncLog: SharedSyncLog }
     if (serverStorageBackend) {
         serverStorageManager = new StorageManager({ backend: serverStorageBackend })
         const serverStorageModules = {
@@ -80,7 +81,7 @@ export async function createStorage(options : {
         }
     }
 
-    const storage : Storage = {
+    const storage: Storage = {
         clientManager: clientStorageManager,
         serverManager: serverStorageManager,
         modules: {
@@ -89,9 +90,11 @@ export async function createStorage(options : {
         }
     }
 
-    const pkMiddleware = new CustomAutoPkMiddleware({ pkGenerator: () => {
-        return uuid()
-    } })
+    const pkMiddleware = new CustomAutoPkMiddleware({
+        pkGenerator: () => {
+            return uuid()
+        }
+    })
     const collectionsToSync = getCollectionsToSync(storage)
     pkMiddleware.setup({ storageRegistry: clientStorageManager.registry, collections: collectionsToSync })
 
@@ -101,18 +104,22 @@ export async function createStorage(options : {
         includeCollections: collectionsToSync
     })
 
-    const middleware : StorageMiddleware[] = [pkMiddleware, syncLoggingMiddleware]
+    const middleware: StorageMiddleware[] = [pkMiddleware, syncLoggingMiddleware]
     if (process.env.LOG_OPERATIONS_PRE_LOG) {
-        middleware.unshift(({process: ({next, operation}) => {
-            console.log(`executing operation for db ${options.dbName} before sync log:`, operation)
-            return next.process({operation})
-        }}))
+        middleware.unshift(({
+            process: ({ next, operation }) => {
+                console.log(`executing operation for db ${options.dbName} before sync log:`, operation)
+                return next.process({ operation })
+            }
+        }))
     }
     if (process.env.LOG_OPERATIONS_POST_LOG) {
-        middleware.push(({process: ({next, operation}) => {
-            console.log(`executing operation for db ${options.dbName} after sync log:`, operation)
-            return next.process({operation})
-        }}))
+        middleware.push(({
+            process: ({ next, operation }) => {
+                console.log(`executing operation for db ${options.dbName} after sync log:`, operation)
+                return next.process({ operation })
+            }
+        }))
     }
 
     clientStorageManager.setMiddleware(middleware)
@@ -120,7 +127,7 @@ export async function createStorage(options : {
     return storage
 }
 
-export function createStorageBackends(options : { backend: BackendType, dbName: string }) {
+export function createStorageBackends(options: { backend: BackendType, dbName: string }) {
     let clientStorageBackend: StorageBackend
     let serverStorageBackend: StorageBackend | null = null
     if (options.backend === 'memory') {
@@ -145,4 +152,13 @@ export function createStorageBackends(options : { backend: BackendType, dbName: 
         throw new Error(`Tried to create storage with unknown backend: ${options.backend}`)
     }
     return { clientStorageBackend, serverStorageBackend }
+}
+
+export async function setClientStorageMiddleware(options: {
+    storage: Storage
+    services: Services
+}) {
+    options.storage.clientManager.setMiddleware([
+        await options.services.sync.createSyncLoggingMiddleware(),
+    ])
 }

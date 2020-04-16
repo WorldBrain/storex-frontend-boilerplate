@@ -1087,11 +1087,6 @@
     through2 "^2.0.0"
     xdg-basedir "^3.0.0"
 
-"@josephg/resolvable@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@josephg/resolvable/-/resolvable-1.0.0.tgz#cd75b09cfad18cd945de9221d403203aa07e3d0a"
-  integrity sha512-OfTtjoqB2doov5aTJxkyAMK8dXoo7CjCUQSYUEtiY34jbWduOGV7+168tmCT8COMsUEd5DMSFg/0iAOPCBTNAQ==
-
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -1484,64 +1479,12 @@
     "@xtuc/long" "4.2.1"
 
 "@worldbrain/storex-backend-dexie@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@worldbrain/storex-backend-dexie/-/storex-backend-dexie-0.2.2.tgz#8a4a47b20db5f9aad8577bbb94652b893f65d263"
-  integrity sha512-MdYW79jV9MWOlwT8fNbwROV6TflsZkBRVPZHgUjgcFpVxCmghYFcZxa7fTIIugHYxtsnW7mWViyceQtIp6s+8A==
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@worldbrain/storex-backend-dexie/-/storex-backend-dexie-0.2.3.tgz#e516ba8e18edceb4c0b7b0214a973a3f821e0c7f"
+  integrity sha512-vlS1NzO91UAZo5PrOkQolmf9+N+6mZRkraXZNERPUvfjA/zlMgltIoCu7pfKSDzJU3kCWgLTaO9VwplpMIZXew==
   dependencies:
-    "@worldbrain/storex" "^0.3.3"
     dexie "^2.0.4"
     dexie-mongoify "^1.3.0"
-
-"@worldbrain/storex-backend-firestore@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@worldbrain/storex-backend-firestore/-/storex-backend-firestore-0.1.1.tgz#3f8f6af803e485747e469814cff2f92d5bebf1fa"
-  integrity sha512-W6jwAPtyXN51rt3fSiUKCnC2ZXckFKP/dFRAVa1fiItm5e/OThYOJQPBpsbdSCYeYZwsZT26HwnOLjAuK1X7xg==
-  dependencies:
-    "@worldbrain/storex" "^0.2.1"
-    firebase "^5.8.2"
-    lodash "^4.17.10"
-    source-map-support "^0.4.18"
-
-"@worldbrain/storex-data-tools@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@worldbrain/storex-data-tools/-/storex-data-tools-0.1.0.tgz#aba51512cb0f0e4f48f6ea88a919ad2859fefe00"
-  integrity sha512-vur3AA9VxkhTrub7+NMKMeJElmJfMGMX+FzaRmfU3v+gGXG3h5YvGPQY14eVeqHA9HwBKNzMDOSMVPBhaP/qRg==
-  dependencies:
-    faker "^4.1.0"
-    lodash "^4.17.11"
-    pluralize "^7.0.0"
-    source-map-support "^0.4.18"
-    traverse "^0.6.6"
-    user-logic "^0.0.1"
-
-"@worldbrain/storex-graphql-client@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@worldbrain/storex-graphql-client/-/storex-graphql-client-0.1.0.tgz#2e20b246d08b7cf32efe8750ca257dc630651142"
-  integrity sha512-implSbLrMnEfs1xsWCXw/qLdQSP3K0RxEB/U1jHxMROR3uLfoFjrA09pZkqKCBJ+qSlqnEN0IfXU31UCyAUANA==
-  dependencies:
-    lodash "^4.17.10"
-    source-map-support "^0.4.18"
-
-"@worldbrain/storex-graphql-schema@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@worldbrain/storex-graphql-schema/-/storex-graphql-schema-0.1.0.tgz#95cdaa1b160f6db1995e27b5c093bf8b3b52afa6"
-  integrity sha512-8lMtaF5qZKJFjF8w2cbd8B8OTcbXLUmTik7ayt3ZMM/5u1esF0pUPTfZiLSIsVXmWOqwn4NrkvJ2uboqBXG6BQ==
-  dependencies:
-    "@worldbrain/storex" "^0.3.3"
-    "@worldbrain/storex-pattern-modules" "^0.2.0"
-    graphql "^14.0.0"
-    lodash "^4.17.10"
-    source-map-support "^0.4.18"
-
-"@worldbrain/storex-pattern-modules@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@worldbrain/storex-pattern-modules/-/storex-pattern-modules-0.2.0.tgz#525ec7ae015e7c03b86a45b799dba326fcdb57fb"
-  integrity sha512-LTF1ox2NW/+M/KZsSONRDRmqpilfZm8P+mXEnDbJwG1W8iQW75AS+9FAAnzMr02orFYRcdEZ3Ykj8Ma1uvxcsA==
-  dependencies:
-    "@worldbrain/storex" "^0.3.3"
-    lodash "^4.17.10"
-    source-map-support "^0.4.18"
-    user-logic "^0.0.1"
 
 "@worldbrain/storex-pattern-modules@^0.3.0":
   version "0.3.0"
@@ -1552,66 +1495,10 @@
     source-map-support "^0.4.18"
     user-logic "^0.0.1"
 
-"@worldbrain/storex-schema-migrations@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@worldbrain/storex-schema-migrations/-/storex-schema-migrations-0.1.0.tgz#5b626eb7a7d5f49b8aa038c27859a55f74191acf"
-  integrity sha512-WdHHg0gyva4rRSesne7sMJ4SGBsJyiAP08cclDRJCyLaJgjz6fzVXFVR6pXuI2TzRtxUh7X2WiINpEFXIh7JBQ==
-  dependencies:
-    "@worldbrain/storex" "^0.1.3"
-    lodash "^4.17.10"
-    source-map-support "^0.4.18"
-    user-logic "^0.0.1"
-
-"@worldbrain/storex-sync@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@worldbrain/storex-sync/-/storex-sync-0.1.1.tgz#1234ba830ac6520f965d545b29e422281d133dd8"
-  integrity sha512-siIzFTCqHQ9MzCvTorVuxMSxUEorEZEHJdQi0Iz7Fb/jhtxBiwRGQnEwXVKX/NMk6M1+qLpUHrv3ffKbv+XgBg==
-  dependencies:
-    "@worldbrain/storex" "^0.3.3"
-    "@worldbrain/storex-graphql-schema" "^0.1.0"
-    lodash "^4.17.10"
-    source-map-support "^0.4.18"
-
-"@worldbrain/storex@^0.1.3":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@worldbrain/storex/-/storex-0.1.4.tgz#d8ec81f3d78f5ca2c464b5b07516d71b43b256ca"
-  integrity sha512-NLxGQ52hc8KkaJZkHMbhK+JiWg6sqsAVeotyxFp0lNaJirSNKIps6IO6jyA01q065VEgiTSFC4T0nQcNS7h5vw==
-  dependencies:
-    event-emitter "^0.3.5"
-    events "^3.0.0"
-    lodash "^4.17.10"
-    pluralize "^7.0.0"
-    randombytes "^2.0.6"
-    source-map-support "^0.4.18"
-
-"@worldbrain/storex@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@worldbrain/storex/-/storex-0.2.1.tgz#a4e0b8b0e685cc7781490c5e56f11313a46b65f5"
-  integrity sha512-zX2hTxJXV517a6+seyv6bxa6DQkX424RwJK5MyTQbVvNH33iVPqKuruzFU9W01FG/x/s4ExqZ6VvZWz28/x30w==
-  dependencies:
-    event-emitter "^0.3.5"
-    events "^3.0.0"
-    lodash "^4.17.11"
-    pluralize "^7.0.0"
-    randombytes "^2.0.6"
-    source-map-support "^0.4.18"
-
-"@worldbrain/storex@^0.3.3":
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/@worldbrain/storex/-/storex-0.3.3.tgz#bcbc6cb21a364bc63168c6ab4bff0b68343348a9"
-  integrity sha512-pz831CRCIab7AqRYOuKH35S3l2u/yTF3q1giLKIET7AijIoWp1LGgdJKhS2riRbZkwLgrpIX/Ah5h9S564rClg==
-  dependencies:
-    event-emitter "^0.3.5"
-    events "^3.0.0"
-    lodash "^4.17.11"
-    pluralize "^7.0.0"
-    randombytes "^2.0.6"
-    source-map-support "^0.4.18"
-
 "@worldbrain/storex@^0.3.4":
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/@worldbrain/storex/-/storex-0.3.4.tgz#4f1d3b08d67d85ffef564ccfc092a797bd94ad75"
-  integrity sha512-SEDLkYZKIE+EjKuPIie2FOZpx3R09FTw2aEQhO6LBx5fTbfo0W1+ETocq+YPgT97ESIejYwYaE8w0AkQ9JVspQ==
+  version "0.3.7"
+  resolved "https://registry.yarnpkg.com/@worldbrain/storex/-/storex-0.3.7.tgz#3a83945691deee9823fb2a5d222eac091a1f8443"
+  integrity sha512-4SU3NQyzlKr0ZQcvrWSdkKI74leFvmBVeIwK0POQW247DOJkcrRFCP/qeMvGeefhVC6FUiRVG4JvKE39xi1BiQ==
   dependencies:
     event-emitter "^0.3.5"
     events "^3.0.0"
@@ -4944,11 +4831,6 @@ fake-indexeddb@^2.1.0:
     realistic-structured-clone "^2.0.1"
     setimmediate "^1.0.5"
 
-faker@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/faker/-/faker-4.1.0.tgz#1e45bbbecc6774b3c195fad2835109c6d748cc3f"
-  integrity sha1-HkW7vsxndLPBlfrSg1EJxtdIzD8=
-
 fast-deep-equal@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-2.0.1.tgz#7b05218ddf9667bf7f370bf7fdb2cb15fdd0aa49"
@@ -5213,7 +5095,7 @@ firebase@2.x.x:
   dependencies:
     faye-websocket ">=0.6.0"
 
-firebase@^5.11.0, firebase@^5.8.2:
+firebase@^5.11.0:
   version "5.11.0"
   resolved "https://registry.yarnpkg.com/firebase/-/firebase-5.11.0.tgz#d1a37b822e01680a3d8d4b476b48d8c80949d9c1"
   integrity sha512-9SKdrjwOU9X0n83Qw+RjQ2v3Fsst0O4x1EuhHj4OZLCe8IVI4aTQNEJqAPP/fBwhdQS/nFNQfcWPxbBu6EF4qw==
@@ -5823,13 +5705,6 @@ graceful-fs@^4.1.0, graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2
   version "4.1.15"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.15.tgz#ffb703e1066e8a0eeaa4c8b80ba9253eeefbfb00"
   integrity sha512-6uHUhOPEBgQ24HM+r6b/QwWfZq+yiFcipKFrOFiBEnWdy5sdzYoi+pJeQaPI5qOLRFqWmAXUPQNsielzdLoecA==
-
-graphql@^14.0.0:
-  version "14.1.1"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.1.1.tgz#d5d77df4b19ef41538d7215d1e7a28834619fac0"
-  integrity sha512-C5zDzLqvfPAgTtP8AUPIt9keDabrdRAqSWjj2OPRKrKxI9Fb65I36s1uCs1UUBFnSWTdO7hyHi7z1ZbwKMKF6Q==
-  dependencies:
-    iterall "^1.2.2"
 
 growl@1.10.5:
   version "1.10.5"
@@ -7046,11 +6921,6 @@ isurl@^1.0.0-alpha5:
   dependencies:
     has-to-string-tag-x "^1.2.0"
     is-object "^1.0.1"
-
-iterall@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/iterall/-/iterall-1.2.2.tgz#92d70deb8028e0c39ff3164fdbf4d8b088130cd7"
-  integrity sha512-yynBb1g+RFUPY64fTrFv7nsjRrENBQJaX2UL+2Szc9REFrSNm1rpSXHGzhmAy7a9uv3vlvgBlXnf9RqmPH1/DA==
 
 jest-changed-files@^23.4.2:
   version "23.4.2"
@@ -11437,14 +11307,6 @@ simple-peer@^9.4.0:
     randombytes "^2.0.3"
     readable-stream "^2.3.4"
 
-simple-signalling@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/simple-signalling/-/simple-signalling-0.2.0.tgz#2c46a2f1b2bf100f158c19571f6b75edafc64ef8"
-  integrity sha512-Mb4q1g2T5jIf9dq2/z5PsjWLpS8pW1IWhm6eJO8YgoK/F/8qf4SfJWLf28LuHZcLN/og7iFwN2Hi4uc8xcaKcw==
-  dependencies:
-    "@josephg/resolvable" "^1.0.0"
-    events "^3.0.0"
-
 simple-swizzle@^0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/simple-swizzle/-/simple-swizzle-0.2.2.tgz#a4da6b635ffcccca33f70d17cb92592de95e557a"
@@ -12315,11 +12177,6 @@ tr46@^1.0.1:
   integrity sha1-qLE/1r/SSJUZZ0zN5VujaTtwbQk=
   dependencies:
     punycode "^2.1.0"
-
-traverse@^0.6.6:
-  version "0.6.6"
-  resolved "https://registry.yarnpkg.com/traverse/-/traverse-0.6.6.tgz#cbdf560fd7b9af632502fed40f918c157ea97137"
-  integrity sha1-y99WD9e5r2MlAv7UD5GMFX6pcTc=
 
 trim-newlines@^1.0.0:
   version "1.0.0"
