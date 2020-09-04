@@ -19,7 +19,7 @@
         "fake-indexeddb": "^2.1.0",
         "firebase": "^5.11.0",
         "font-awesome": "^4.7.0",
-        "node-sass": "^4.11.0",
+        "node-sass": "^4.13.1",
         "query-string": "^6.8.1",
         "react": "^16.8.4",
         "react-dom": "^16.8.4",

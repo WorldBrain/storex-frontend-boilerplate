@@ -976,6 +976,17 @@
     "@firebase/util" "0.2.14"
     tslib "1.9.3"
 
+"@firebase/performance@0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@firebase/performance/-/performance-0.2.1.tgz#14cf8c747672ca529cc6d07234ef5baab227d4c9"
+  integrity sha512-vo/24+W35foc2ShRgeIlx2Ej45+Sn6uYPpnYzTtJb3DwE3sb0BVGocVgINbXyguUq2PHS+6yLsCm88y12DS2EA==
+  dependencies:
+    "@firebase/installations" "0.1.0"
+    "@firebase/logger" "0.1.13"
+    "@firebase/performance-types" "0.0.1"
+    "@firebase/util" "0.2.14"
+    tslib "1.9.3"
+
 "@firebase/polyfill@0.3.13":
   version "0.3.13"
   resolved "https://registry.yarnpkg.com/@firebase/polyfill/-/polyfill-0.3.13.tgz#f08570ea6429e3ef5f8daa4df62c6b7ad2501908"
@@ -1086,6 +1097,11 @@
     stream-events "^1.0.1"
     through2 "^2.0.0"
     xdg-basedir "^3.0.0"
+
+"@josephg/resolvable@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@josephg/resolvable/-/resolvable-1.0.0.tgz#cd75b09cfad18cd945de9221d403203aa07e3d0a"
+  integrity sha512-OfTtjoqB2doov5aTJxkyAMK8dXoo7CjCUQSYUEtiY34jbWduOGV7+168tmCT8COMsUEd5DMSFg/0iAOPCBTNAQ==
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
@@ -1486,6 +1502,44 @@
     dexie "^2.0.4"
     dexie-mongoify "^1.3.0"
 
+"@worldbrain/storex-backend-firestore@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@worldbrain/storex-backend-firestore/-/storex-backend-firestore-0.1.1.tgz#3f8f6af803e485747e469814cff2f92d5bebf1fa"
+  integrity sha512-W6jwAPtyXN51rt3fSiUKCnC2ZXckFKP/dFRAVa1fiItm5e/OThYOJQPBpsbdSCYeYZwsZT26HwnOLjAuK1X7xg==
+  dependencies:
+    "@worldbrain/storex" "^0.2.1"
+    firebase "^5.8.2"
+    lodash "^4.17.10"
+    source-map-support "^0.4.18"
+
+"@worldbrain/storex-data-tools@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@worldbrain/storex-data-tools/-/storex-data-tools-0.1.0.tgz#aba51512cb0f0e4f48f6ea88a919ad2859fefe00"
+  integrity sha512-vur3AA9VxkhTrub7+NMKMeJElmJfMGMX+FzaRmfU3v+gGXG3h5YvGPQY14eVeqHA9HwBKNzMDOSMVPBhaP/qRg==
+  dependencies:
+    faker "^4.1.0"
+    lodash "^4.17.11"
+    pluralize "^7.0.0"
+    source-map-support "^0.4.18"
+    traverse "^0.6.6"
+    user-logic "^0.0.1"
+
+"@worldbrain/storex-graphql-client@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@worldbrain/storex-graphql-client/-/storex-graphql-client-0.1.0.tgz#2e20b246d08b7cf32efe8750ca257dc630651142"
+  integrity sha512-implSbLrMnEfs1xsWCXw/qLdQSP3K0RxEB/U1jHxMROR3uLfoFjrA09pZkqKCBJ+qSlqnEN0IfXU31UCyAUANA==
+  dependencies:
+    lodash "^4.17.10"
+    source-map-support "^0.4.18"
+
+"@worldbrain/storex-graphql-schema@^0.1.0":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@worldbrain/storex-graphql-schema/-/storex-graphql-schema-0.1.1.tgz#d4deba3d45e6a4f069f21a3f258a00b463d417e7"
+  integrity sha512-tXyluyWEoNyMQ/bAHqR88Z3i+HLFR4bLFiYbQMPLpn6SbDVlH4oFazZRc+ozklw/tizAntofP6cCu7Nhmclpbw==
+  dependencies:
+    lodash "^4.17.10"
+    source-map-support "^0.4.18"
+
 "@worldbrain/storex-pattern-modules@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@worldbrain/storex-pattern-modules/-/storex-pattern-modules-0.3.0.tgz#f3ea52163aedc71a3b175897c78c13aad6ddadee"
@@ -1495,7 +1549,38 @@
     source-map-support "^0.4.18"
     user-logic "^0.0.1"
 
-"@worldbrain/storex@^0.3.4":
+"@worldbrain/storex-schema-migrations@^0.1.0":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@worldbrain/storex-schema-migrations/-/storex-schema-migrations-0.1.1.tgz#34f505c78f88561ae26a2ce241fba0fada8eb342"
+  integrity sha512-qeVd2igNkfVWjnYi99hhuHRbghh8xnx5PtlZ2FEvgvLIbrolWquqIQ8HtHb3W2UdkGHXORA3O6jYJMpD2gWRRw==
+  dependencies:
+    lodash "^4.17.10"
+    source-map-support "^0.4.18"
+    user-logic "^0.0.1"
+
+"@worldbrain/storex-sync@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@worldbrain/storex-sync/-/storex-sync-0.1.1.tgz#1234ba830ac6520f965d545b29e422281d133dd8"
+  integrity sha512-siIzFTCqHQ9MzCvTorVuxMSxUEorEZEHJdQi0Iz7Fb/jhtxBiwRGQnEwXVKX/NMk6M1+qLpUHrv3ffKbv+XgBg==
+  dependencies:
+    "@worldbrain/storex" "^0.3.3"
+    "@worldbrain/storex-graphql-schema" "^0.1.0"
+    lodash "^4.17.10"
+    source-map-support "^0.4.18"
+
+"@worldbrain/storex@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@worldbrain/storex/-/storex-0.2.1.tgz#a4e0b8b0e685cc7781490c5e56f11313a46b65f5"
+  integrity sha512-zX2hTxJXV517a6+seyv6bxa6DQkX424RwJK5MyTQbVvNH33iVPqKuruzFU9W01FG/x/s4ExqZ6VvZWz28/x30w==
+  dependencies:
+    event-emitter "^0.3.5"
+    events "^3.0.0"
+    lodash "^4.17.11"
+    pluralize "^7.0.0"
+    randombytes "^2.0.6"
+    source-map-support "^0.4.18"
+
+"@worldbrain/storex@^0.3.3", "@worldbrain/storex@^0.3.4":
   version "0.3.7"
   resolved "https://registry.yarnpkg.com/@worldbrain/storex/-/storex-0.3.7.tgz#3a83945691deee9823fb2a5d222eac091a1f8443"
   integrity sha512-4SU3NQyzlKr0ZQcvrWSdkKI74leFvmBVeIwK0POQW247DOJkcrRFCP/qeMvGeefhVC6FUiRVG4JvKE39xi1BiQ==
@@ -4831,6 +4916,11 @@ fake-indexeddb@^2.1.0:
     realistic-structured-clone "^2.0.1"
     setimmediate "^1.0.5"
 
+faker@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/faker/-/faker-4.1.0.tgz#1e45bbbecc6774b3c195fad2835109c6d748cc3f"
+  integrity sha1-HkW7vsxndLPBlfrSg1EJxtdIzD8=
+
 fast-deep-equal@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-2.0.1.tgz#7b05218ddf9667bf7f370bf7fdb2cb15fdd0aa49"
@@ -5107,6 +5197,21 @@ firebase@^5.11.0:
     "@firebase/functions" "0.4.6"
     "@firebase/messaging" "0.3.19"
     "@firebase/performance" "0.2.0"
+    "@firebase/polyfill" "0.3.13"
+    "@firebase/storage" "0.2.15"
+
+firebase@^5.8.2:
+  version "5.11.1"
+  resolved "https://registry.yarnpkg.com/firebase/-/firebase-5.11.1.tgz#e7d376265545d7b0538b4679a96145c26a2b5c39"
+  integrity sha512-cop2UHytKas8WJZTovZqhpZIgwRfsvegijyOjgmMJoaOHCnyH4eymPneglgXsK5ExOdxJSTC4QD5qETrdL3dMw==
+  dependencies:
+    "@firebase/app" "0.3.17"
+    "@firebase/auth" "0.10.2"
+    "@firebase/database" "0.3.20"
+    "@firebase/firestore" "1.2.2"
+    "@firebase/functions" "0.4.6"
+    "@firebase/messaging" "0.3.19"
+    "@firebase/performance" "0.2.1"
     "@firebase/polyfill" "0.3.13"
     "@firebase/storage" "0.2.15"
 
@@ -7722,11 +7827,6 @@ lodash._shimkeys@~2.4.1:
   dependencies:
     lodash._objecttypes "~2.4.1"
 
-lodash.assign@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/lodash.assign/-/lodash.assign-4.2.0.tgz#0d99f3ccd7a6d261d19bdaeb9245005d285808e7"
-  integrity sha1-DZnzzNem0mHRm9rrkkUAXShYCOc=
-
 lodash.camelcase@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
@@ -7736,11 +7836,6 @@ lodash.clone@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.clone/-/lodash.clone-4.5.0.tgz#195870450f5a13192478df4bc3d23d2dea1907b6"
   integrity sha1-GVhwRQ9aExkkeN9Lw9I9LeoZB7Y=
-
-lodash.clonedeep@^4.3.2:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
-  integrity sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=
 
 lodash.get@^4.4.2:
   version "4.4.2"
@@ -7818,11 +7913,6 @@ lodash.merge@^4.6.0:
   resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.1.tgz#adc25d9cb99b9391c59624f379fbba60d7111d54"
   integrity sha512-AOYza4+Hf5z1/0Hztxpm2/xiPZgi/cjMqdnKTUWTBSKchJlxXXuUSxCCl8rJlf4g6yww/j6mA8nC8Hw/EZWxKQ==
 
-lodash.mergewith@^4.6.0:
-  version "4.6.1"
-  resolved "https://registry.yarnpkg.com/lodash.mergewith/-/lodash.mergewith-4.6.1.tgz#639057e726c3afbdb3e7d42741caa8d6e4335927"
-  integrity sha512-eWw5r+PYICtEBgrBE5hhlT6aAa75f411bgDz/ZL2KZqYV03USvucsxcHUIlGTDTECs1eunpI7HOV7U+WLDvNdQ==
-
 lodash.noop@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/lodash.noop/-/lodash.noop-3.0.1.tgz#38188f4d650a3a474258439b96ec45b32617133c"
@@ -7875,10 +7965,10 @@ lodash@4.17.5:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.5.tgz#99a92d65c0272debe8c96b6057bc8fbfa3bed511"
   integrity sha512-svL3uiZf1RwhH+cWrfZn3A4+U58wbP0tGVTLQPbjplZxZ8ROD9VLuNgsRniTlLe7OlSqR79RUehXgpBW/s0IQw==
 
-"lodash@>=3.5 <5", lodash@^4.0.0, lodash@^4.14.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.3.0, lodash@^4.8.0, lodash@~4.17.10:
-  version "4.17.11"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
-  integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
+"lodash@>=3.5 <5", lodash@^4.0.0, lodash@^4.14.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.15, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.3.0, lodash@^4.8.0, lodash@~4.17.10:
+  version "4.17.20"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
+  integrity sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==
 
 lodash@^3.10.1:
   version "3.10.1"
@@ -8411,15 +8501,10 @@ mute-stream@~0.0.4:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.8.tgz#1630c42b2251ff81e2a283de96a5497ea92e5e0d"
   integrity sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==
 
-nan@^2.0.0, nan@^2.9.2:
-  version "2.12.1"
-  resolved "https://registry.yarnpkg.com/nan/-/nan-2.12.1.tgz#7b1aa193e9aa86057e3c7bbd0ac448e770925552"
-  integrity sha512-JY7V6lRkStKcKTvHO5NVSQRv+RV+FIL5pvDoLiAtSL9pKlC5x9PKQcZDsq7m4FO4d57mkhC6Z+QhAh3Jdk5JFw==
-
-nan@^2.10.0:
-  version "2.13.1"
-  resolved "https://registry.yarnpkg.com/nan/-/nan-2.13.1.tgz#a15bee3790bde247e8f38f1d446edcdaeb05f2dd"
-  integrity sha512-I6YB/YEuDeUZMmhscXKxGgZlFnhsn5y0hgOZBadkzfTRrZBtJDZeg6eQf7PYMIEclwmorTKK8GztsyOUSVBREA==
+nan@^2.0.0, nan@^2.13.2, nan@^2.9.2:
+  version "2.14.1"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.1.tgz#d7be34dfa3105b91494c3147089315eff8874b01"
+  integrity sha512-isWHgVjnFjh2x2yuJ/tj3JbwoHu3UC2dX5G/88Cm24yB6YopVgxvBObDY7n5xW6ExmFhJpSEQqFPvq9zaXc8Jw==
 
 nanomatch@^1.2.9:
   version "1.2.13"
@@ -8631,10 +8716,10 @@ node-releases@^1.1.3, node-releases@^1.1.8:
   dependencies:
     semver "^5.3.0"
 
-node-sass@^4.11.0:
-  version "4.11.0"
-  resolved "https://registry.yarnpkg.com/node-sass/-/node-sass-4.11.0.tgz#183faec398e9cbe93ba43362e2768ca988a6369a"
-  integrity sha512-bHUdHTphgQJZaF1LASx0kAviPH7sGlcyNhWade4eVIpFp6tsn7SV8xNMTbsQFpEV9VXpnwTTnNYlfsZXgGgmkA==
+node-sass@^4.13.1:
+  version "4.13.1"
+  resolved "https://registry.yarnpkg.com/node-sass/-/node-sass-4.13.1.tgz#9db5689696bb2eec2c32b98bfea4c7a2e992d0a3"
+  integrity sha512-TTWFx+ZhyDx1Biiez2nB0L3YrCZ/8oHagaDalbuBSlqXgUPsdkUSzJsVxeDO9LtPB49+Fh3WQl3slABo6AotNw==
   dependencies:
     async-foreach "^0.1.3"
     chalk "^1.1.1"
@@ -8643,12 +8728,10 @@ node-sass@^4.11.0:
     get-stdin "^4.0.1"
     glob "^7.0.3"
     in-publish "^2.0.0"
-    lodash.assign "^4.2.0"
-    lodash.clonedeep "^4.3.2"
-    lodash.mergewith "^4.6.0"
+    lodash "^4.17.15"
     meow "^3.7.0"
     mkdirp "^0.5.1"
-    nan "^2.10.0"
+    nan "^2.13.2"
     node-gyp "^3.8.0"
     npmlog "^4.0.0"
     request "^2.88.0"
@@ -11307,6 +11390,15 @@ simple-peer@^9.4.0:
     randombytes "^2.0.3"
     readable-stream "^2.3.4"
 
+simple-signalling@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/simple-signalling/-/simple-signalling-0.3.0.tgz#e3838f7fdbfcf90afd237dd26817289777035a8b"
+  integrity sha512-W8PPS0hiJFQPIxT9FhUXeZSmjf1xd8M9sVlNazp6taBu+PtbZNow2qUCshalri/i2YMVOucVgsOHWRZdbKU3rg==
+  dependencies:
+    "@josephg/resolvable" "^1.0.0"
+    events "^3.0.0"
+    typed-emitter "^0.1.0"
+
 simple-swizzle@^0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/simple-swizzle/-/simple-swizzle-0.2.2.tgz#a4da6b635ffcccca33f70d17cb92592de95e557a"
@@ -12177,6 +12269,11 @@ tr46@^1.0.1:
   integrity sha1-qLE/1r/SSJUZZ0zN5VujaTtwbQk=
   dependencies:
     punycode "^2.1.0"
+
+traverse@^0.6.6:
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/traverse/-/traverse-0.6.6.tgz#cbdf560fd7b9af632502fed40f918c157ea97137"
+  integrity sha1-y99WD9e5r2MlAv7UD5GMFX6pcTc=
 
 trim-newlines@^1.0.0:
   version "1.0.0"
